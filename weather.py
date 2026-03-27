@@ -1,6 +1,14 @@
 
 series_titles = ["Maximum temperature (Degree C)", "Minimum temperature (Degree C)", "Rainfall amount (millimetres)"]
 
+calculation_options = [
+    "Mean",
+    "Variance",
+    "Standard Deviation",
+    "Range",
+    "Interquartile Range (IQR)"
+]
+
 def mean(in_series):
     total = 0
     count = 0
@@ -16,7 +24,19 @@ def mean(in_series):
     return total / count
 
 def variance(in_series):
-   pass
+    data = [x for x in in_series if x is not None]
+
+    n = len(data)
+    if n == 0:
+        return None
+
+    avg = mean(data)
+
+    total = 0
+    for value in data:
+        total += (value - avg) ** 2
+
+    return total / n
 
 def standard_deviation(in_series):
    return variance(in_series) ** 0.5
@@ -99,10 +119,30 @@ def menu(data_table):
 
     series = data_table[choice]
 
-    print(f"Range: {series_range(series)}")
-    print(f"Mean: {mean(series)}")
-    print(f"IQR: {interquartile_range(series)}")
+    print("\nSelect a calculation:")
+    calc_choice = get_user_choice(calculation_options)
 
+    if calc_choice == "Mean":
+        result = mean(series)
+
+    elif calc_choice == "Variance":
+        result = variance(series)
+
+    elif calc_choice == "Standard Deviation":
+        result = standard_deviation(series)
+
+    elif calc_choice == "Range":
+        result = series_range(series)
+
+    elif calc_choice == "Interquartile Range (IQR)":
+        result = interquartile_range(series)
+
+    else:
+        print("Invalid choice")
+        return
+
+    print(f"{calc_choice}: {result}")
+    
 if __name__ == "__main__":
     data = read_csv('weather.csv')
     menu(data)

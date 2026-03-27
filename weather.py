@@ -62,13 +62,14 @@ def filter_series(year_series, month_series, day_series, data_series, max_date=N
     pass
 
 def series_range(in_series):    
-    minimum = 1000
-    maximum = -1000
-    for x in in_series:
-        if x <minimum:
-            minimum = x
-        if x >maximum:
-            maximum = x
+    data = [x for x in in_series if x is not None]
+
+    if len(data) == 0:
+        return None
+
+    minimum = min(data)
+    maximum = max(data)
+
     return maximum - minimum
 
 def read_csv(file,default_value=None):
@@ -95,9 +96,11 @@ def get_user_choice(options):
 def menu(data_table):
     print("Select a data series:")
     choice = get_user_choice(series_titles)
+
     series = data_table[choice]
-    print(f"series_range: {mean(data_table[choice])}")
-    print(f"Mean: {mean(data_table[choice])}")
+
+    print(f"Range: {series_range(series)}")
+    print(f"Mean: {mean(series)}")
     print(f"IQR: {interquartile_range(series)}")
 
 if __name__ == "__main__":
